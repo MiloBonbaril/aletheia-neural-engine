@@ -85,12 +85,20 @@ class PPOAgent:
             value_t.item()
         )
 
-    def decay_lr(self, current_step: int, total_steps: int) -> None:
+    def decay_lr(self, current_step: int, total_steps: int, start_step: int = 0, start_lr: float = None) -> None:
         """
-        Linearly decays learning rate based on current progress.
+        Linearly decays learning rate based on current progress from start_step to total_steps.
         """
-        fraction = 1.0 - (current_step / total_steps)
-        new_lr = self.config.lr * max(fraction, 0.0)
+        if start_lr is None:
+            start_lr = self.config.lr
+            
+        denom = total_steps - start_step
+        if denom <= 0:
+            fraction = 0.0
+        else:
+            fraction = (total_steps - current_step) / denom
+            
+        new_lr = start_lr * max(fraction, 0.0)
         for param_group in self.optimizer.param_groups:
             param_group['lr'] = new_lr
 
@@ -189,7 +197,15 @@ class PPOAgent:
             "kl_divergence": kl_divergence_epoch / safe_num_batches
         }
 
-    def save(self, filename: str) -> None:
+    def save(
+        self, 
+        filename: str, 
+        global_step: int = 0, 
+        num_episodes: int = 0, 
+        best_eval_reward: float = -float("inf"),
+        update_count: int = 0,
+        recent_rewards: list = None
+    ) -> None:
         """
         Saves policy parameters and optimization checkpoints.
         """
@@ -198,12 +214,18 @@ class PPOAgent:
             "actor_state_dict": self.actor.state_dict(),
             "critic_state_dict": self.critic.state_dict(),
             "optimizer_state_dict": self.optimizer.state_dict(),
-            "config": self.config
+            "config": self.config,
+            "global_step": global_step,
+            "num_episodes": num_episodes,
+            "best_eval_reward": best_eval_reward,
+            "update_count": update_count,
+            "recent_rewards": recent_rewards if recent_rewards is not None else []
         }, filepath)
 
-    def load(self, filepath: str) -> None:
+    def load(self, filepath: str) -> Dict[str, Any]:
         """
         Loads policy parameters and optimization checkpoints.
+        Returns a dictionary containing training metadata.
         """
         assert os.path.exists(filepath), f"Checkpoint not found at: {filepath}"
         checkpoint = torch.load(filepath, map_location=self.device)
@@ -211,3 +233,12 @@ class PPOAgent:
         self.critic.load_state_dict(checkpoint["critic_state_dict"])
         if "optimizer_state_dict" in checkpoint:
             self.optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+            
+        return {
+            "global_step": checkpoint.get("global_step", 0),
+            "num_episodes": checkpoint.get("num_episodes", 0),
+            "best_eval_reward": checkpoint.get("best_eval_reward", -float("inf")),
+            "update_count": checkpoint.get("update_count", 0),
+            "recent_rewards": checkpoint.get("recent_rewards", []),
+            "config": checkpoint.get("config", self.config)
+        }

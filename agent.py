@@ -228,7 +228,7 @@ class PPOAgent:
         Returns a dictionary containing training metadata.
         """
         assert os.path.exists(filepath), f"Checkpoint not found at: {filepath}"
-        checkpoint = torch.load(filepath, map_location=self.device)
+        checkpoint = torch.load(filepath, map_location=self.device, weights_only=False)
         self.actor.load_state_dict(checkpoint["actor_state_dict"])
         self.critic.load_state_dict(checkpoint["critic_state_dict"])
         if "optimizer_state_dict" in checkpoint:

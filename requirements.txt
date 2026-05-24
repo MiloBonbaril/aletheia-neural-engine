@@ -1,0 +1,14 @@
+# Centralized dependencies for the Modular Reinforcement Learning Engine
+
+# Core Machine Learning & Scientific Computing
+# Note: numpy is pinned below 2.0.0 to prevent compatibility conflicts with older compiled PyTorch binaries
+numpy<2.0.0
+torch>=2.0.0
+
+# Build Tools (needed for Box2D compilation on Windows/macOS/Linux)
+swig
+
+# Reinforcement Learning Environments & Simulation
+gymnasium>=0.28.1
+gymnasium[box2d]>=0.28.1
+pygame>=2.1.3

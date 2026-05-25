@@ -15,3 +15,5 @@ pygame>=2.1.3
 
 
 pysc2
+# Pin protobuf below 4.0.0 (e.g. 3.20.3) due to compatibility issues with s2clientprotocol's generated pb2 files
+protobuf~=3.20.0

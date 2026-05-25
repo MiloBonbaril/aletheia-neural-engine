@@ -1,7 +1,7 @@
 import gymnasium as gym
 import numpy as np
 from typing import Tuple, Any, Dict
-from env_interface import BaseEnvironment
+from utils.env_interface import BaseEnvironment
 
 class GymnasiumEnv(BaseEnvironment):
     """

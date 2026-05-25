@@ -3,32 +3,40 @@ import argparse
 import numpy as np
 import torch
 import time
+import sys
+
+# Allow imports from parent directory
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from config import Config
-from gym_env import GymnasiumEnv
-from agent import PPOAgent
+from gym_env.gym_env import GymnasiumEnv
+from agent.agent import PPOAgent
 
 def main():
     parser = argparse.ArgumentParser(description="Evaluate a trained PPO agent on continuous control environments.")
     parser.add_argument(
         "--checkpoint", 
+        "-c",
         type=str, 
         default="checkpoints/ppo_bipedal_best.pt", 
         help="Path to the saved PyTorch model checkpoint."
     )
     parser.add_argument(
         "--episodes", 
+        "-e",
         type=int, 
         default=5, 
         help="Number of evaluation episodes to run."
     )
     parser.add_argument(
         "--render", 
+        "-r",
         action="store_true", 
         help="Render the environment visually during evaluation."
     )
     parser.add_argument(
         "--seed", 
+        "-s",
         type=int, 
         default=100, 
         help="Random seed for evaluation environment initialization."

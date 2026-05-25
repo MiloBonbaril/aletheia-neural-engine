@@ -5,10 +5,14 @@ import random
 import numpy as np
 import torch
 from collections import deque
+import sys
+
+# Allow imports from parent directory
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from config import Config
-from gym_env import GymnasiumEnv
-from agent import PPOAgent
+from gym_env.gym_env import GymnasiumEnv
+from agent.agent import PPOAgent
 
 def evaluate_agent(agent: PPOAgent, env_id: str, n_episodes: int = 5) -> float:
     """
@@ -41,6 +45,7 @@ def main():
     parser = argparse.ArgumentParser(description="Train a PPO agent on continuous control environments.")
     parser.add_argument(
         "--resume",
+        "-r",
         type=str,
         nargs="?",
         const=os.path.join(config.checkpoint_dir, config.best_model_name),

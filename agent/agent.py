@@ -6,8 +6,8 @@ import numpy as np
 from typing import Tuple, Dict, Any
 
 from config import Config
-from networks import ActorNetwork, CriticNetwork
-from buffer import RolloutBuffer
+from agent.networks import ActorNetwork, CriticNetwork
+from agent.buffer import RolloutBuffer
 
 class PPOAgent:
     """

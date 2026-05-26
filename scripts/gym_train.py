@@ -12,7 +12,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from config import Config
 from gym_env.gym_env import GymnasiumEnv
-from agent.agent import PPOAgent
+from ppo_agent.agent import PPOAgent
 
 def evaluate_agent(agent: PPOAgent, env_id: str, n_episodes: int = 5) -> float:
     """

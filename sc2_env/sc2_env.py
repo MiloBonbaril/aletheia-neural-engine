@@ -34,14 +34,16 @@ class CustomMeleeMap(lib.Map):
     players = 2
 
 def main():
-        print("--------------------------------------------------")
+    """
+    print("--------------------------------------------------")
     print("PySC2: All Possible Actions in the Action Space:")
     print("--------------------------------------------------")
     for action in actions.FUNCTIONS:
         print(f"Action ID: {action.id:<4} Name: {action.name:<35} Args: {action.args}")
     print(f"Total possible actions: {len(actions.FUNCTIONS)}")
     print("--------------------------------------------------\n")
-
+    """
+    
     print("Initializing StarCraft II Environment...")
     env = sc2_env.SC2Env(
         map_name=CustomMeleeMap(),
